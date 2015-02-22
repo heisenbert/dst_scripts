@@ -1,0 +1,4 @@
+#!/bin/bash
+path_for_dst=/opt/dst/
+path_for_inst=/opt/dst/exec
+name_of_dst_user=dst

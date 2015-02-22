@@ -1,0 +1,87 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          dont_starve_together
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: little dst script
+# Description:       Little script file to control don't starve together servers 
+#                    meh.
+### END INIT INFO
+
+# Author: Norbert Ruehl <norbert_ruehl@linux.com>
+#
+
+
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Description of the service"
+NAME=dst
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+SERVER_NAME="dst_1"
+RUN_ORDER="cd /opt/dst/exec/bin && bash -c 'LD_LIBRARY_PATH=/opt/dst/dst_lib ./dontstarve_dedicated_server_nullrenderer -conf_dir $SERVER_NAME"
+
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+#TODO check if rightfully source
+if [ -z $path_for_dst ];
+	then  echo "path_for_dst not set"
+	exit 3
+fi
+if [ -z $path_for_inst ];
+	then  echo "path_for_dst not set"
+	exit 3
+fi
+if [ -z $name_of_dst_user ];
+	then  echo "path_for_dst not set"
+	exit 3
+fi
+
+
+case "$1" in
+  info)
+	echo "path for dst: $path_for_dst"
+	echo "path for dst: $path_for_inst"
+	echo "config_might_be: $path_for_dst.klei"
+	echo "dst is used as: $name_of_dst_user"
+	;;
+  start)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  stop)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  status)
+	status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|status|info}" >&2
+	exit 3
+	;;
+esac
+
+:
