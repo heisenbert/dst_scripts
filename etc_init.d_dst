@@ -20,11 +20,10 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Description of the service"
 NAME=dst
-PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
 SERVER_NAME="dst_1"
-RUN_ORDER="cd /opt/dst/exec/bin && bash -c 'LD_LIBRARY_PATH=/opt/dst/dst_lib ./dontstarve_dedicated_server_nullrenderer -conf_dir $SERVER_NAME"
+RUN_ORDER="cd /opt/dst/exec/bin && bash -c 'LD_LIBRARY_PATH=/opt/dst/dst_lib ./dontstarve_dedicated_server_nullrenderer -conf_dir $SERVER_NAME'"
 
 
 # Read configuration variable file if it is present
@@ -43,11 +42,11 @@ if [ -z $path_for_dst ];
 	exit 3
 fi
 if [ -z $path_for_inst ];
-	then  echo "path_for_dst not set"
+	then  echo "path_for_inst not set"
 	exit 3
 fi
 if [ -z $name_of_dst_user ];
-	then  echo "path_for_dst not set"
+	then  echo "name_of_dst_user not set"
 	exit 3
 fi
 
@@ -60,23 +59,17 @@ case "$1" in
 	echo "dst is used as: $name_of_dst_user"
 	;;
   start)
-	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-	do_start
-	case "$?" in
-		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-	esac
+#	case "$?" in
+#	TODO check if nescesary files like script exists, and warn if not , 
+	echo "it's something..."
+#	TODO check which servers are there aaand already up etc
+	start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/dst_$SERVER_NAME.pid --chuid $name_of_dst_user --exec /opt/dst/$SERVER_NAME.sh &
 	;;
   stop)
-	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-	do_stop
-	case "$?" in
-		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-	esac
+	echo "not yet implmenetd"
 	;;
   status)
-	status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+	echo "not yet implemented"
 	;;
   *)
 	echo "Usage: $SCRIPTNAME {start|stop|status|info}" >&2
